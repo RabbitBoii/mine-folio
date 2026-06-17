@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Hide the scrollbar everywhere (scroll still works via wheel/trackpad/keys) —
+   keeps the full-screen 3D experience clean, incl. the loading screen */
+html {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* old Edge/IE */
+}
+body::-webkit-scrollbar {
+  display: none;                /* Chromium/WebKit */
+}
+
+@font-face {
+  font-family: 'Minecraft';
+  src: url('/fonts/minecraft.ttf') format('truetype');
+}
