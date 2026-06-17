@@ -9,6 +9,7 @@ import Environment from './Environment'
 import AboutSign from './AboutSign'
 import Signboard from './Signboard'
 import Chest from './Chest'
+import Particles from './Particles'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -186,6 +187,9 @@ function SceneInner({ onSkillsReveal }) {
             </Suspense>
 
             <Ground />
+
+            {/* Ambient floating motes for atmosphere */}
+            <Particles />
 
             <Suspense fallback={null}>
                 <Environment />
