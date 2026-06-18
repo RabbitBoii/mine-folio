@@ -19,18 +19,21 @@ const faceY = (from, to) => Math.atan2(to[0] - from[0], to[2] - from[2])
 const STEVE_HOME = [0, 0, 0]
 
 // About sign sits to the right, between the trees — faces Steve
-const SIGN_POS = [7, 0, -1.5]
+const SIGN_POS = [7, 0, 0.3]   // moved forward toward the camera, more in view
 const SIGN_ROT = faceY(SIGN_POS, STEVE_HOME)
 
-// Experience boards on the left (placeholder content for now) — each faces Steve
+// Experience boards — side by side, same y & depth, both angled toward the
+// viewing camera so they read head-on (like the about sign) and fill the frame.
+const EXP_BOARD_Z = -1
+const EXP_CAM_XZ  = { x: -3.5, z: 2.2 }      // where the camera views the pair from
 const EXP_SIGNS = [
-    { pos: [-7.5, 0, -1],  rotY: faceY([-7.5, 0, -1],  STEVE_HOME), title: 'Projects' },
-    { pos: [-3.8, 0, 0.2], rotY: faceY([-3.8, 0, 0.2], STEVE_HOME), title: 'Experience' },
+    { pos: [-5, 0, EXP_BOARD_Z], rotY: faceY([-5, 0, EXP_BOARD_Z], [EXP_CAM_XZ.x, 0, EXP_CAM_XZ.z]) },
+    { pos: [-2, 0, EXP_BOARD_Z], rotY: faceY([-2, 0, EXP_BOARD_Z], [EXP_CAM_XZ.x, 0, EXP_CAM_XZ.z]) },
 ]
 
-// Chest sits to Steve's right, mid-depth; Steve walks to just in front of it
-const CHEST_POS     = [2.8, 0, -2.8]
-const STEVE_WALK_TO = { x: 1.5, z: -1.8 }
+// Chest sits to Steve's right, pushed further back for breathing room
+const CHEST_POS     = [2.8, 0, -4.2]
+const STEVE_WALK_TO = { x: 1.9, z: -3.0 }
 // +PI because the model's opening is on its -Z face
 const CHEST_ROT_Y   = faceY(CHEST_POS, [STEVE_WALK_TO.x, 0, STEVE_WALK_TO.z]) + Math.PI
 
@@ -42,19 +45,19 @@ const STEVE_ROT_CHEST = faceY([STEVE_WALK_TO.x, 0, STEVE_WALK_TO.z], CHEST_POS)
 // Camera keyframes
 const CAM_START   = { x: 0,    y: 1,    z: 5    }
 const CAM_PAN     = { x: 2.5,  y: 1.6,  z: 4    }   // panning right toward sign
-const CAM_SIGN    = { x: 5.44, y: 1.55, z: -1.17 } // head-on, on Steve's side of the sign
-const CAM_CHEST   = { x: 0.6,  y: 2.1,  z: 1.4  }   // 3/4 view of Steve at the chest
+const CAM_SIGN    = { x: 5.4,  y: 1.55, z: 0.25 }  // head-on, on Steve's side of the sign
+const CAM_CHEST   = { x: 0.7,  y: 2.1,  z: 0.3  }   // 3/4 view of Steve at the chest
 
-const CAM_EXP     = { x: -2.4, y: 1.5,  z: 1.0  }   // in front of the exp board (Steve behind cam)
+const CAM_EXP     = { x: EXP_CAM_XZ.x, y: 1.5, z: EXP_CAM_XZ.z } // head-on, centered on the pair
 
 const TARGET_START = { x: 0,    y: 1,    z: 0    }
 const TARGET_PAN   = { x: 3.5,  y: 1.4,  z: -0.5 }
-const TARGET_SIGN  = { x: 7,    y: 1.45, z: -1.5 }
-const TARGET_CHEST = { x: 2.2,  y: 1.0,  z: -2.6 }
-const TARGET_EXP   = { x: -3.8, y: 1.4,  z: 0.2  }  // nearer experience board, head-on
+const TARGET_SIGN  = { x: 7,    y: 1.45, z: 0.3  }
+const TARGET_CHEST = { x: 2.3,  y: 1.0,  z: -3.7 }
+const TARGET_EXP   = { x: EXP_CAM_XZ.x, y: 1.3, z: EXP_BOARD_Z } // centered between both boards
 
 // After the skills, Steve walks back home and faces the experience boards (on his right)
-const STEVE_ROT_EXP = faceY(STEVE_HOME, [-3.8, 0, 0.2])
+const STEVE_ROT_EXP = faceY(STEVE_HOME, [EXP_CAM_XZ.x, 0, EXP_BOARD_Z])
 
 function SceneInner({ onSkillsReveal }) {
     const { camera } = useThree()
@@ -199,13 +202,18 @@ function SceneInner({ onSkillsReveal }) {
                 <AboutSign position={SIGN_POS} rotation={[0, SIGN_ROT, 0]} />
             </Suspense>
 
-            {/* Experience boards on the left — placeholder bullets for now */}
+            {/* Experience boards on the left — same placeholder for now */}
             {EXP_SIGNS.map((s, i) => (
                 <Signboard key={i} position={s.pos} rotation={[0, s.rotY, 0]}>
-                    <div style={{ fontSize: '30px', fontWeight: 'bold' }}>{s.title}</div>
+                    <div style={{ fontSize: '26px', fontWeight: 'bold' }}>Experience</div>
+                    <div style={{ fontSize: '16px', color: '#5a3a16', marginTop: '2px' }}>
+                        Role · Company · Year
+                    </div>
                     <div style={{ borderTop: '3px solid rgba(90,58,22,0.5)', margin: '10px 22px' }} />
-                    <div style={{ fontSize: '19px', lineHeight: '1.7' }}>
-                        • Coming soon<br />• Coming soon<br />• Coming soon
+                    <div style={{ fontSize: '18px', lineHeight: '1.6' }}>
+                        • What you built here
+                        <br />• Impact / outcome
+                        <br />• Tech you used
                     </div>
                 </Signboard>
             ))}

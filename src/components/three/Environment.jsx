@@ -179,16 +179,16 @@ function Terrain({ tex }) {
 export default function Environment() {
     const tex = useBlockTextures()
 
-    // Trees — [x, y, z, scale]. Spread to the sides, center kept clear & open.
+    // Trees — [x, y, z, scale]. Pushed to the sides/back; foreground kept open
+    // and spacious so the signs/chest/Steve have room to breathe.
     const trees = [
-        [-9, 0, 1, 1.0],
-        [9, 0, 0.5, 1.0],
-        [-5, 0, -6, 1.1],
-        [5, 0, -6, 1.1],
-        [-8, 0, -4, 1.1],
-        [8, 0, -5, 1.1],
+        [-6, 0, -6,  1.1],
+        [6,  0, -6,  1.1],
+        [-9, 0, -4,  1.2],
+        [9,  0, -5,  1.2],
+        [9.5, 0, -2.5, 1.2],  // behind the about sign — fills the empty right side
         [-12, 0, -9, 1.3],
-        [12, 0, -10, 1.3],
+        [12,  0, -10, 1.3],
     ]
 
     return (
