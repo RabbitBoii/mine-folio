@@ -9,6 +9,7 @@ import Environment from './Environment'
 import AboutSign from './AboutSign'
 import Signboard from './Signboard'
 import Chest from './Chest'
+import Cabin from './Cabin'
 import Particles from './Particles'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -58,6 +59,14 @@ const TARGET_EXP   = { x: EXP_CAM_XZ.x, y: 1.3, z: EXP_BOARD_Z } // centered bet
 
 // After the skills, Steve walks back home and faces the experience boards (on his right)
 const STEVE_ROT_EXP = faceY(STEVE_HOME, [EXP_CAM_XZ.x, 0, EXP_BOARD_Z])
+
+// Cabin up on the rise, back-left; Steve walks toward it for the projects/contact area
+const HOUSE_POS        = [-13, 0, -10]
+const HOUSE_ROT        = faceY(HOUSE_POS, STEVE_HOME)        // open front faces Steve
+const STEVE_HOUSE_WALK = { x: -9, z: -7 }                   // stops in front of the cabin
+const STEVE_ROT_HOUSE  = faceY([STEVE_HOUSE_WALK.x, 0, STEVE_HOUSE_WALK.z], HOUSE_POS)
+const CAM_HOUSE        = { x: -7, y: 3.4, z: 2.0 }          // establishing 3/4 of the cabin
+const TARGET_HOUSE     = { x: -13, y: 3.2, z: -10 }
 
 function SceneInner({ onSkillsReveal }) {
     const { camera } = useThree()
@@ -111,35 +120,40 @@ function SceneInner({ onSkillsReveal }) {
         })
 
         // ── Sign beat ───────────────────────────────────────────────
-        tl.to(steveRot, { y: STEVE_ROT_SIGN, duration: 0.10, ease: 'power2.inOut' }, 0)
-        tl.to(camPos,    { ...CAM_PAN,    duration: 0.12, ease: 'power1.inOut' }, 0.04)
-        tl.to(targetPos, { ...TARGET_PAN, duration: 0.12, ease: 'power1.inOut' }, 0.04)
-        tl.to(camPos,    { ...CAM_SIGN,   duration: 0.11, ease: 'power2.inOut' }, 0.15)
-        tl.to(targetPos, { ...TARGET_SIGN, duration: 0.11, ease: 'power2.inOut' }, 0.15)
-        // (0.26 – 0.32) hold so the bio can be read
+        tl.to(steveRot, { y: STEVE_ROT_SIGN, duration: 0.09, ease: 'power2.inOut' }, 0)
+        tl.to(camPos,    { ...CAM_PAN,    duration: 0.10, ease: 'power1.inOut' }, 0.03)
+        tl.to(targetPos, { ...TARGET_PAN, duration: 0.10, ease: 'power1.inOut' }, 0.03)
+        tl.to(camPos,    { ...CAM_SIGN,   duration: 0.10, ease: 'power2.inOut' }, 0.13)
+        tl.to(targetPos, { ...TARGET_SIGN, duration: 0.10, ease: 'power2.inOut' }, 0.13)
+        // (0.23 – 0.28) hold so the bio can be read
 
         // ── Transition to the chest ─────────────────────────────────
-        tl.to(steveRot, { y: STEVE_ROT_CHEST, duration: 0.10, ease: 'power2.inOut' }, 0.32)
-        tl.to(camPos,    { ...CAM_CHEST,    duration: 0.20, ease: 'power1.inOut' }, 0.32)
-        tl.to(targetPos, { ...TARGET_CHEST, duration: 0.20, ease: 'power1.inOut' }, 0.32)
-        tl.to(stevePos, { ...STEVE_WALK_TO, duration: 0.14, ease: 'none' }, 0.42)
+        tl.to(steveRot, { y: STEVE_ROT_CHEST, duration: 0.09, ease: 'power2.inOut' }, 0.28)
+        tl.to(camPos,    { ...CAM_CHEST,    duration: 0.18, ease: 'power1.inOut' }, 0.28)
+        tl.to(targetPos, { ...TARGET_CHEST, duration: 0.18, ease: 'power1.inOut' }, 0.28)
+        tl.to(stevePos, { ...STEVE_WALK_TO, duration: 0.12, ease: 'none' }, 0.37)
 
         // ── Chest opens + skills reveal ─────────────────────────────
-        tl.to(chestOpen.current, { v: 1, duration: 0.08, ease: 'power2.out' }, 0.56)
-        tl.to(reveal,            { v: 1, duration: 0.06, ease: 'power1.inOut' }, 0.64)
-        // (0.70 – 0.76) hold — skills fully visible to read
+        tl.to(chestOpen.current, { v: 1, duration: 0.07, ease: 'power2.out' }, 0.49)
+        tl.to(reveal,            { v: 1, duration: 0.05, ease: 'power1.inOut' }, 0.56)
+        // (0.61 – 0.66) hold — skills fully visible to read
 
         // ── Skills fade + chest closes; Steve heads home ────────────
-        tl.to(reveal,            { v: 0, duration: 0.06, ease: 'power1.in' }, 0.76)
-        tl.to(chestOpen.current, { v: 0, duration: 0.06, ease: 'power2.in' }, 0.76)
-        // Steve turns toward the experience boards and walks back home
-        tl.to(steveRot, { y: STEVE_ROT_EXP, duration: 0.14, ease: 'power2.inOut' }, 0.76)
-        tl.to(stevePos, { x: 0, z: 0,       duration: 0.12, ease: 'none' }, 0.78)
+        tl.to(reveal,            { v: 0, duration: 0.05, ease: 'power1.in' }, 0.66)
+        tl.to(chestOpen.current, { v: 0, duration: 0.05, ease: 'power2.in' }, 0.66)
+        tl.to(steveRot, { y: STEVE_ROT_EXP, duration: 0.10, ease: 'power2.inOut' }, 0.66)
+        tl.to(stevePos, { x: 0, z: 0,       duration: 0.10, ease: 'none' }, 0.67)
 
-        // ── Experience beat — camera eases back + rotates to the boards
-        //    in step with the walk-back (no last-second snap) ────────
-        tl.to(camPos,    { ...CAM_EXP,    duration: 0.18, ease: 'power2.inOut' }, 0.78)
-        tl.to(targetPos, { ...TARGET_EXP, duration: 0.18, ease: 'power2.inOut' }, 0.78)
+        // ── Experience beat — camera frames both boards ─────────────
+        tl.to(camPos,    { ...CAM_EXP,    duration: 0.12, ease: 'power2.inOut' }, 0.72)
+        tl.to(targetPos, { ...TARGET_EXP, duration: 0.12, ease: 'power2.inOut' }, 0.72)
+        // (0.84 – 0.86) hold
+
+        // ── House beat — Steve walks to the cabin, camera frames it ─
+        tl.to(steveRot, { y: STEVE_ROT_HOUSE, duration: 0.08, ease: 'power2.inOut' }, 0.86)
+        tl.to(stevePos, { ...STEVE_HOUSE_WALK, duration: 0.12, ease: 'none' }, 0.87)
+        tl.to(camPos,    { ...CAM_HOUSE,    duration: 0.13, ease: 'power1.inOut' }, 0.87)
+        tl.to(targetPos, { ...TARGET_HOUSE, duration: 0.13, ease: 'power1.inOut' }, 0.87)
     })
 
     useEffect(() => {
@@ -220,6 +234,10 @@ function SceneInner({ onSkillsReveal }) {
 
             <Suspense fallback={null}>
                 <Chest position={CHEST_POS} scale={1} rotation={[0, CHEST_ROT_Y, 0]} openRef={chestOpen} />
+            </Suspense>
+
+            <Suspense fallback={null}>
+                <Cabin position={HOUSE_POS} rotation={[0, HOUSE_ROT, 0]} />
             </Suspense>
 
             <OrbitControls

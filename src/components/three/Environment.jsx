@@ -187,7 +187,6 @@ export default function Environment() {
         [-9, 0, -4,  1.2],
         [9,  0, -5,  1.2],
         [9.5, 0, -2.5, 1.2],  // behind the about sign — fills the empty right side
-        [-12, 0, -9, 1.3],
         [12,  0, -10, 1.3],
     ]
 

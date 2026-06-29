@@ -16,7 +16,7 @@ export default function App() {
       <Scene onSkillsReveal={setSkillsReveal} />
 
       {/* Scroll driver — hero → about sign → walk to chest → skills */}
-      <div id="scroll-container" style={{ height: '650vh' }} />
+      <div id="scroll-container" style={{ height: '780vh' }} />
 
       {/* UI overlays — already fixed-positioned internally */}
       <ChatIntro />
